@@ -4,402 +4,197 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grille CECRL — Progression en Français</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
-  :root {
-    --bg: #F4F1EC;
-    --bg2: #EDEAE3;
-    --card: #FFFFFF;
-    --text: #1C1B19;
-    --text2: #6B6860;
-    --text3: #9B9A96;
-    --border: #E0DDD6;
-    --blue: #1A56A4;
-    --blue-light: #EBF2FF;
-    --green: #127A4A;
-    --green-light: #E6F5ED;
-    --amber: #96560A;
-    --amber-light: #FFF4E0;
-    --red: #B23B3B;
-    --red-light: #FFF0F0;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
+:root {
+  --bg: #F5F3EF;
+  --bg2: #EDEAE3;
+  --card: #FFFFFF;
+  --text: #1C1B19;
+  --text2: #6B6860;
+  --text3: #9B9A96;
+  --border: #E0DDD6;
+  --blue: #185FA5;
+  --blue-light: #E6F1FB;
+  --green: #3B6D11;
+  --green-light: #EAF3DE;
+  --r: 12px;
+  --r-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* HEADER */
+.site-header {
+  background: var(--text); color: white; padding: 0 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 58px; position: sticky; top: 0; z-index: 100;
+}
+.site-header h1 { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
+.site-header .sub { font-size: 12px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+.header-right { display: flex; align-items: center; gap: 10px; }
+.mode-badge { font-size: 12px; font-weight: 500; padding: 3px 12px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); }
+.mode-badge.teacher { background: rgba(24,95,165,0.35); color: #B5D4F4; }
+.mode-badge.student { background: rgba(59,109,17,0.35); color: #C0DD97; }
+.hbtn { font-size: 12px; padding: 5px 12px; border: 1px solid rgba(255,255,255,0.15); border-radius: var(--r-sm); background: transparent; color: rgba(255,255,255,0.6); cursor: pointer; font-family: inherit; }
+.hbtn:hover { background: rgba(255,255,255,0.08); color: white; }
 
-  body {
-    font-family: 'Outfit', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 15px;
-    line-height: 1.6;
-  }
+/* SETUP */
+.setup { max-width: 520px; margin: 3.5rem auto; padding: 0 1.5rem; }
+.setup-title { text-align: center; margin-bottom: 2rem; }
+.setup-title h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.03em; }
+.setup-title p { font-size: 13px; color: var(--text2); margin-top: 5px; }
+.setup-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; margin-bottom: 12px; }
+.setup-card-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center; }
+.setup-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.setup-icon.t { background: var(--blue-light); }
+.setup-icon.s { background: var(--green-light); }
+.setup-card-head h3 { font-size: 15px; font-weight: 600; }
+.setup-card-head p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.setup-card-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 10px; }
+.field label { display: block; font-size: 11px; font-weight: 500; color: var(--text2); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+.field input { width: 100%; padding: 9px 12px; font-size: 14px; font-family: inherit; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg); color: var(--text); outline: none; transition: border-color 0.15s; }
+.field input:focus { border-color: var(--blue); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 18px; font-size: 13px; font-weight: 500; font-family: inherit; border-radius: var(--r-sm); border: 1px solid transparent; cursor: pointer; transition: all 0.15s; }
+.btn-blue { background: var(--blue); color: white; }
+.btn-blue:hover { background: #0C447C; }
+.btn-green { background: var(--green); color: white; }
+.btn-green:hover { background: #27500A; }
+.btn-ghost { background: transparent; border-color: var(--border); color: var(--text2); }
+.btn-ghost:hover { background: var(--bg2); color: var(--text); }
+.divider { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
+.divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.divider span { font-size: 12px; color: var(--text3); }
 
-  /* ── HEADER ── */
-  .site-header {
-    background: var(--text);
-    color: white;
-    padding: 0 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .site-header h1 { font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
-  .site-header .subtitle { font-size: 13px; color: rgba(255,255,255,0.5); margin-top: 1px; }
-  .mode-badge {
-    font-size: 12px; font-weight: 500; padding: 4px 12px;
-    border-radius: 20px; border: 1px solid rgba(255,255,255,0.2);
-    color: rgba(255,255,255,0.8);
-  }
-  .mode-badge.teacher { background: rgba(26,86,164,0.4); }
-  .mode-badge.student { background: rgba(18,122,74,0.4); }
+/* FIREBASE MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
+.modal { background: white; border-radius: var(--r); width: 100%; max-width: 520px; }
+.modal-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.modal-head h2 { font-size: 15px; font-weight: 600; }
+.modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 14px; }
+.modal-foot { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+.note { background: #FFF4E0; border: 1px solid #F5D99A; border-radius: var(--r-sm); padding: 12px 14px; font-size: 12px; color: #7A5200; line-height: 1.6; }
+.note strong { display: block; margin-bottom: 3px; font-size: 13px; }
+.note a { color: #633806; }
+.note code { font-size: 11px; background: rgba(120,80,0,0.1); padding: 1px 5px; border-radius: 4px; font-family: monospace; }
 
-  /* ── SETUP SCREEN ── */
-  .setup-screen {
-    max-width: 560px; margin: 4rem auto; padding: 0 1.5rem;
-  }
-  .setup-card {
-    background: var(--card); border-radius: var(--radius);
-    border: 1px solid var(--border); overflow: hidden;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  }
-  .setup-card-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 12px;
-  }
-  .setup-icon {
-    width: 42px; height: 42px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; flex-shrink: 0;
-  }
-  .setup-icon.teacher { background: var(--blue-light); }
-  .setup-icon.student { background: var(--green-light); }
-  .setup-card-header h2 { font-size: 16px; font-weight: 600; }
-  .setup-card-header p { font-size: 13px; color: var(--text2); margin-top: 2px; }
-  .setup-card-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 12px; }
+/* APP */
+.app { display: none; }
+.app.active { display: block; }
+.container { max-width: 1080px; margin: 0 auto; padding: 1.5rem; }
 
-  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-  .field input {
-    width: 100%; padding: 10px 14px; font-size: 14px; font-family: inherit;
-    border: 1px solid var(--border); border-radius: var(--radius-sm);
-    background: var(--bg); color: var(--text); outline: none;
-    transition: border-color 0.15s;
-  }
-  .field input:focus { border-color: var(--blue); }
+/* TOOLBAR */
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
+.toolbar input { flex: 1; min-width: 160px; padding: 8px 12px; font-size: 13px; font-family: inherit; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--card); color: var(--text); outline: none; }
+.toolbar input:focus { border-color: var(--blue); }
 
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 10px 20px; font-size: 14px; font-weight: 500; font-family: inherit;
-    border-radius: var(--radius-sm); border: 1px solid transparent;
-    cursor: pointer; transition: all 0.15s; text-decoration: none;
-  }
-  .btn-primary { background: var(--blue); color: white; }
-  .btn-primary:hover { background: #144490; }
-  .btn-green { background: var(--green); color: white; }
-  .btn-green:hover { background: #0e6040; }
-  .btn-ghost { background: transparent; border-color: var(--border); color: var(--text2); }
-  .btn-ghost:hover { background: var(--bg2); color: var(--text); }
-  .btn-sm { padding: 6px 14px; font-size: 13px; }
-  .btn-danger { background: transparent; border-color: #E0B0B0; color: var(--red); }
-  .btn-danger:hover { background: var(--red-light); }
+/* PILLS */
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.25rem; }
+.pill { display: flex; align-items: center; gap: 5px; padding: 5px 12px; font-size: 12px; font-weight: 500; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; background: var(--card); color: var(--text2); transition: all 0.12s; }
+.pill:hover { border-color: #bbb; }
+.pill.active { background: var(--blue); border-color: var(--blue); color: white; }
+.pill .pdel { opacity: 0.5; font-size: 10px; }
+.pill .pdel:hover { opacity: 1; }
 
-  .setup-divider {
-    display: flex; align-items: center; gap: 12px; margin: 0.5rem 0;
-  }
-  .setup-divider::before, .setup-divider::after {
-    content: ''; flex: 1; height: 1px; background: var(--border);
-  }
-  .setup-divider span { font-size: 12px; color: var(--text3); }
+/* GLOBAL BAR */
+.gbar-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
+.gbar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
+.gbar-name { font-size: 14px; font-weight: 500; }
+.lv-badge { font-size: 13px; font-weight: 500; padding: 3px 13px; border-radius: 20px; }
+.track { height: 14px; background: var(--bg2); border-radius: 7px; overflow: hidden; display: flex; gap: 2px; margin-bottom: 7px; }
+.seg { flex: 1; border-radius: 2px; background: var(--bg2); transition: background 0.4s; }
+.seg.done { background: var(--blue); }
+.seg.partial { background: #85B7EB; }
+.lv-markers { display: flex; }
+.lv-markers span { flex: 1; text-align: center; font-size: 11px; font-weight: 500; color: var(--text3); }
+.lv-markers span.reached { color: var(--blue); }
 
-  .config-note {
-    background: var(--amber-light); border: 1px solid #F5D99A;
-    border-radius: var(--radius-sm); padding: 12px 14px;
-    font-size: 13px; color: var(--amber); line-height: 1.5;
-  }
-  .config-note strong { display: block; margin-bottom: 4px; }
-  .config-note code {
-    font-family: 'DM Mono', monospace; font-size: 12px;
-    background: rgba(150,86,10,0.1); padding: 1px 5px; border-radius: 4px;
-  }
+/* CIRCLES */
+.circles { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 1.25rem; }
+.ring-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 8px 12px; text-align: center; }
+.ring-card canvas { display: block; margin: 0 auto; }
+.ring-pct { font-size: 14px; font-weight: 600; margin-top: 6px; color: var(--text); }
+.ring-name { font-size: 11px; font-weight: 500; color: var(--text2); margin-top: 3px; line-height: 1.3; }
+.ring-lv { font-size: 11px; color: var(--text3); margin-top: 2px; }
 
-  /* ── MAIN APP ── */
-  .app { display: none; }
-  .app.active { display: block; }
+/* SKILL GROUPS */
+.skills { display: flex; flex-direction: column; gap: 10px; }
+.group-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; }
+.group-title { padding: 9px 16px; background: var(--bg2); border-bottom: 1px solid var(--border); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text2); }
+.skill-block { border-bottom: 1px solid var(--border); }
+.skill-block:last-child { border-bottom: none; }
+.skill-name { padding: 10px 16px 6px; font-size: 13px; font-weight: 500; }
+.lvgrid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.lvcell { padding: 8px 6px 10px; border-right: 1px solid var(--border); cursor: pointer; transition: background 0.12s; text-align: center; }
+.lvcell:last-child { border-right: none; }
+.lvcell:hover { background: var(--bg); }
+.lvcell.checked { background: #EAF3DE; }
+.lvcell.checked:hover { background: #D6EEC8; }
+.lvcell.ro { cursor: default; }
+.lvcell.ro:hover { background: transparent; }
+.lvcell.checked.ro { background: #EAF3DE; }
+.lvtag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 10px; margin-bottom: 5px; letter-spacing: 0.03em; }
+.lvtag.A1{background:#EAF3DE;color:#27500A}
+.lvtag.A2{background:#E1F5EE;color:#085041}
+.lvtag.B1{background:#E6F1FB;color:#0C447C}
+.lvtag.B2{background:#EEEDFE;color:#3C3489}
+.lvtag.C1{background:#FAEEDA;color:#633806}
+.lvtag.C2{background:#FAECE7;color:#712B13}
+.chkbox { width: 26px; height: 26px; border-radius: 7px; border: 1.5px solid var(--border); background: white; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; color: transparent; transition: all 0.12s; }
+.lvcell.checked .chkbox { background: var(--green); border-color: var(--green); color: #EAF3DE; }
+.desc { font-size: 11px; color: var(--text2); line-height: 1.45; text-align: left; }
+.lvcell.checked .desc { color: #3B6D11; }
 
-  .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1.5rem; }
+/* STUDENT VIEW */
+.sv-header { background: var(--text); color: white; border-radius: var(--r); padding: 1.5rem; margin-bottom: 1.25rem; }
+.sv-header .welcome { font-size: 12px; opacity: 0.45; margin-bottom: 4px; }
+.sv-header h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.03em; }
+.sv-header .lv-display { margin-top: 10px; display: inline-flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); padding: 5px 14px; border-radius: 20px; font-size: 13px; }
 
-  /* ── TEACHER: student selector ── */
-  .toolbar {
-    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  .toolbar input[type=text] {
-    flex: 1; min-width: 160px; padding: 9px 14px; font-size: 14px;
-    font-family: inherit; border: 1px solid var(--border);
-    border-radius: var(--radius-sm); background: var(--card); color: var(--text); outline: none;
-    transition: border-color 0.15s;
-  }
-  .toolbar input:focus { border-color: var(--blue); }
+/* SYNC */
+.sync-pill { font-size: 11px; display: flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+.sdot { width: 6px; height: 6px; border-radius: 50%; background: #2ECC71; }
+.sdot.loading { background: #F39C12; animation: pulse 1s infinite; }
+.sdot.error { background: #E74C3C; }
+@keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
 
-  .student-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.5rem; }
-  .student-pill {
-    display: flex; align-items: center; gap: 6px;
-    padding: 6px 12px 6px 14px;
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 20px; cursor: pointer; font-size: 13px;
-    transition: all 0.15s;
-  }
-  .student-pill:hover { border-color: #b0b0b0; }
-  .student-pill.active { background: var(--blue); border-color: var(--blue); color: white; }
-  .student-pill .pill-del {
-    width: 16px; height: 16px; border-radius: 50%;
-    background: rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center;
-    font-size: 10px; cursor: pointer; line-height: 1;
-  }
-  .student-pill.active .pill-del { background: rgba(255,255,255,0.2); }
-  .student-pill .pill-del:hover { background: rgba(0,0,0,0.2); }
+/* EMPTY */
+.empty { text-align: center; padding: 3rem 1rem; color: var(--text2); }
+.empty .ei { font-size: 32px; margin-bottom: 10px; }
 
-  /* ── STUDENT CARD ── */
-  .student-header-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 1.25rem 1.5rem;
-    margin-bottom: 1.5rem;
-    display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
-  }
-  .student-avatar {
-    width: 48px; height: 48px; border-radius: 12px;
-    background: var(--blue-light); color: var(--blue);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; font-weight: 600; flex-shrink: 0;
-  }
-  .student-meta { flex: 1; }
-  .student-meta h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; }
-  .student-meta p { font-size: 13px; color: var(--text2); margin-top: 2px; }
-
-  .level-chip {
-    font-size: 14px; font-weight: 600; padding: 6px 16px;
-    border-radius: 20px; white-space: nowrap;
-  }
-  .level-A1 { background: #E8F8EE; color: #0C6B35; }
-  .level-A2 { background: #D4F5E3; color: #0A5A2D; }
-  .level-B1 { background: #DBE9FF; color: #1A4C99; }
-  .level-B2 { background: #C8DCFF; color: #1440A0; }
-  .level-C1 { background: #FFF0C8; color: #7A5200; }
-  .level-C2 { background: #FFE0A8; color: #704800; }
-  .level-none { background: var(--bg2); color: var(--text3); }
-
-  /* ── PROGRESS BAR ── */
-  .progress-section { margin-bottom: 1.5rem; }
-  .progress-labels {
-    display: flex; justify-content: space-between;
-    font-size: 11px; font-weight: 500; margin-bottom: 6px;
-    color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em;
-  }
-  .progress-track {
-    height: 8px; background: var(--bg2); border-radius: 4px; overflow: hidden;
-    display: flex; gap: 2px;
-  }
-  .progress-seg {
-    flex: 1; border-radius: 2px; transition: background 0.4s;
-    background: var(--bg2);
-  }
-  .progress-seg.done { background: var(--blue); }
-  .progress-seg.partial { background: #85B2F0; }
-
-  /* ── GRID ── */
-  .grid-section { display: flex; flex-direction: column; gap: 12px; }
-
-  .skill-group-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: var(--radius); overflow: hidden;
-  }
-  .skill-group-header {
-    padding: 10px 16px;
-    background: var(--bg2); border-bottom: 1px solid var(--border);
-    font-size: 12px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.07em; color: var(--text2);
-  }
-
-  .skill-row {
-    display: grid;
-    grid-template-columns: 160px repeat(6, 1fr);
-    border-bottom: 1px solid var(--border);
-    min-height: 52px;
-  }
-  .skill-row:last-child { border-bottom: none; }
-  .skill-row-label {
-    padding: 12px 16px; font-size: 13px; font-weight: 500;
-    display: flex; align-items: center;
-    border-right: 1px solid var(--border);
-    background: var(--card);
-  }
-
-  .skill-cell {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 8px 4px; gap: 4px;
-    border-right: 1px solid var(--border); position: relative;
-    cursor: pointer; transition: background 0.15s;
-  }
-  .skill-cell:last-child { border-right: none; }
-  .skill-cell:hover { background: var(--bg); }
-  .skill-cell.checked { background: var(--green-light); }
-  .skill-cell.readonly { cursor: default; }
-  .skill-cell.readonly:hover { background: inherit; }
-
-  .cell-level {
-    font-size: 10px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.06em; color: var(--text3);
-  }
-  .skill-cell.checked .cell-level { color: var(--green); }
-
-  .cell-check {
-    width: 28px; height: 28px; border-radius: 8px;
-    border: 2px solid var(--border); background: white;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; transition: all 0.15s;
-  }
-  .skill-cell.checked .cell-check {
-    background: var(--green); border-color: var(--green); color: white;
-  }
-  .skill-cell.readonly .cell-check { border-color: var(--border); cursor: default; }
-
-  .cell-tooltip {
-    display: none; position: absolute; bottom: calc(100% + 8px); left: 50%;
-    transform: translateX(-50%);
-    background: var(--text); color: white; font-size: 12px; line-height: 1.4;
-    padding: 8px 12px; border-radius: 8px; width: 220px; z-index: 50;
-    pointer-events: none;
-  }
-  .cell-tooltip::after {
-    content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-    border: 5px solid transparent; border-top-color: var(--text);
-  }
-  .skill-cell:hover .cell-tooltip { display: block; }
-
-  /* Grid header row */
-  .skill-row.header {
-    background: var(--bg2); min-height: 36px;
-    position: sticky; top: 60px; z-index: 10;
-    border-bottom: 2px solid var(--border);
-  }
-  .skill-row.header .skill-row-label {
-    font-size: 11px; font-weight: 600; color: var(--text2);
-    text-transform: uppercase; letter-spacing: 0.06em;
-    background: var(--bg2);
-  }
-  .skill-row.header .skill-cell {
-    font-size: 11px; font-weight: 700; color: var(--text);
-    background: var(--bg2); cursor: default;
-  }
-  .skill-row.header .skill-cell:hover { background: var(--bg2); }
-
-  /* ── STUDENT VIEW ── */
-  .student-view-header {
-    background: var(--text); color: white;
-    padding: 2rem 1.5rem; border-radius: var(--radius);
-    margin-bottom: 1.5rem;
-  }
-  .student-view-header .welcome { font-size: 13px; opacity: 0.5; margin-bottom: 4px; }
-  .student-view-header h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.03em; }
-  .student-view-header .level-display {
-    margin-top: 12px; display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px;
-    font-size: 14px; font-weight: 500;
-  }
-
-  .skill-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
-  .stat-card {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: 14px 16px;
-  }
-  .stat-card .stat-label { font-size: 12px; color: var(--text2); margin-bottom: 4px; }
-  .stat-card .stat-bar { height: 4px; background: var(--bg2); border-radius: 2px; margin-top: 8px; overflow: hidden; }
-  .stat-card .stat-fill { height: 100%; border-radius: 2px; background: var(--blue); transition: width 0.4s; }
-  .stat-card .stat-count { font-size: 20px; font-weight: 600; }
-
-  /* ── FIREBASE CONFIG MODAL ── */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 200; padding: 1rem;
-  }
-  .modal {
-    background: white; border-radius: var(--radius);
-    width: 100%; max-width: 540px; overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-  }
-  .modal-header {
-    padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .modal-header h2 { font-size: 16px; font-weight: 600; }
-  .modal-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 14px; }
-  .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
-
-  /* ── SYNC STATUS ── */
-  .sync-dot {
-    width: 8px; height: 8px; border-radius: 50%; display: inline-block;
-    margin-right: 4px;
-  }
-  .sync-dot.ok { background: #2ECC71; }
-  .sync-dot.loading { background: #F39C12; animation: pulse 1s infinite; }
-  .sync-dot.error { background: #E74C3C; }
-  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.3 } }
-
-  .sync-bar {
-    position: fixed; bottom: 1rem; right: 1rem;
-    background: var(--text); color: white;
-    padding: 8px 14px; border-radius: 20px; font-size: 12px;
-    display: flex; align-items: center; gap: 4px;
-    opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 99;
-  }
-  .sync-bar.visible { opacity: 1; }
-
-  /* ── EMPTY STATE ── */
-  .empty { text-align: center; padding: 3rem 1rem; color: var(--text2); }
-  .empty .empty-icon { font-size: 40px; margin-bottom: 12px; }
-  .empty h3 { font-size: 16px; font-weight: 500; margin-bottom: 6px; }
-  .empty p { font-size: 13px; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 680px) {
-    .skill-row { grid-template-columns: 110px repeat(6, 1fr); }
-    .skill-row-label { font-size: 12px; padding: 8px 10px; }
-    .skill-cell { padding: 6px 2px; }
-    .cell-check { width: 24px; height: 24px; font-size: 12px; }
-    .cell-level { font-size: 9px; }
-  }
+@media(max-width:640px){
+  .lvgrid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .skill-block .lvgrid > .lvcell:nth-child(3) { border-right: none; }
+  .skill-block .lvgrid > .lvcell:nth-child(n+4) { border-top: 1px solid var(--border); }
+  .circles { grid-template-columns: repeat(3, 1fr); }
+}
 </style>
 </head>
 <body>
 
-<!-- FIREBASE CONFIG MODAL -->
-<div class="modal-overlay" id="configModal">
+<!-- FIREBASE MODAL -->
+<div class="modal-overlay" id="configModal" style="display:none">
   <div class="modal">
-    <div class="modal-header">
+    <div class="modal-head">
       <h2>⚙️ Configuration Firebase</h2>
+      <button class="hbtn" onclick="document.getElementById('configModal').style.display='none'">✕</button>
     </div>
     <div class="modal-body">
-      <div class="config-note">
-        <strong>Première utilisation — 3 étapes :</strong>
+      <div class="note">
+        <strong>3 étapes pour démarrer gratuitement :</strong>
         1. Créez un projet sur <a href="https://firebase.google.com" target="_blank">firebase.google.com</a><br>
-        2. Activez <strong>Realtime Database</strong> (mode test)<br>
-        3. Dans Paramètres du projet → Vos applications → Ajoutez une app Web, copiez les valeurs ci-dessous
+        2. Activez <strong>Realtime Database</strong> → mode test<br>
+        3. Paramètres du projet → Vos applications → Web → copiez les valeurs ci-dessous
       </div>
       <div class="field"><label>Database URL</label><input id="cfg-url" placeholder="https://mon-projet-default-rtdb.firebaseio.com" /></div>
-      <div class="field"><label>API Key</label><input id="cfg-apikey" placeholder="AIzaSy..." /></div>
+      <div class="field"><label>API Key</label><input id="cfg-apikey" placeholder="AIzaSy…" /></div>
       <div class="field"><label>Project ID</label><input id="cfg-projectid" placeholder="mon-projet-12345" /></div>
-      <p style="font-size:12px;color:var(--text3)">Ces informations sont stockées localement dans votre navigateur.</p>
+      <p style="font-size:12px;color:#999">Ces infos sont sauvegardées localement dans votre navigateur.</p>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-primary" onclick="saveConfig()">Enregistrer et continuer</button>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="document.getElementById('configModal').style.display='none'">Annuler</button>
+      <button class="btn btn-blue" onclick="saveConfig()">Enregistrer →</button>
     </div>
   </div>
 </div>
@@ -407,51 +202,51 @@
 <!-- HEADER -->
 <header class="site-header">
   <div>
-    <div style="font-size:17px;font-weight:600;">Grille CECRL</div>
-    <div style="font-size:12px;opacity:0.5;">Progression en Français</div>
+    <div class="site-header" style="background:transparent;position:static;height:auto;padding:0">
+      <div>
+        <h1 style="font-size:16px;font-weight:600">Grille CECRL</h1>
+        <div class="sub">Progression en Français</div>
+      </div>
+    </div>
   </div>
-  <div style="display:flex;align-items:center;gap:10px;">
-    <span id="syncBar" class="sync-bar"><span class="sync-dot loading" id="syncDot"></span><span id="syncText">Sync…</span></span>
-    <span id="modeBadge" class="mode-badge">Chargement…</span>
-    <button class="btn btn-ghost btn-sm" onclick="switchMode()" id="switchBtn" style="color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.2);">Changer de mode</button>
-    <button class="btn btn-ghost btn-sm" onclick="openConfig()" style="color:rgba(255,255,255,0.5);border-color:rgba(255,255,255,0.1);font-size:11px;">⚙</button>
+  <div class="header-right">
+    <div class="sync-pill" id="syncPill"><div class="sdot loading" id="sdot"></div><span id="syncTxt">Connexion…</span></div>
+    <span class="mode-badge" id="modeBadge">—</span>
+    <button class="hbtn" onclick="switchMode()" id="switchBtn">Changer</button>
+    <button class="hbtn" onclick="openConfig()">⚙</button>
   </div>
 </header>
 
-<!-- SETUP SCREEN -->
-<div class="setup-screen" id="setupScreen">
-  <div style="text-align:center;margin-bottom:2rem;">
-    <h2 style="font-size:24px;font-weight:700;letter-spacing:-0.03em;">Qui êtes-vous ?</h2>
-    <p style="color:var(--text2);margin-top:6px;">Choisissez votre mode d'accès</p>
-  </div>
+<!-- SETUP -->
+<div id="setup" style="display:none">
+  <div class="setup">
+    <div class="setup-title">
+      <h2>Qui êtes-vous ?</h2>
+      <p>Choisissez votre mode d'accès à la grille</p>
+    </div>
 
-  <div class="setup-card" style="margin-bottom:1rem;">
-    <div class="setup-card-header">
-      <div class="setup-icon teacher">🎓</div>
-      <div>
-        <h2>Enseignant</h2>
-        <p>Gérer les élèves et cocher les compétences</p>
+    <div class="setup-card">
+      <div class="setup-card-head">
+        <div class="setup-icon t">🎓</div>
+        <div><h3>Enseignant</h3><p>Gérer les élèves et valider les compétences</p></div>
+      </div>
+      <div class="setup-card-body">
+        <div class="field"><label>Mot de passe enseignant</label><input type="password" id="tPwd" placeholder="Créez ou entrez votre mot de passe" onkeydown="if(event.key==='Enter')enterTeacher()" /></div>
+        <button class="btn btn-blue" onclick="enterTeacher()">Accéder — mode enseignant →</button>
       </div>
     </div>
-    <div class="setup-card-body">
-      <div class="field"><label>Mot de passe enseignant</label><input type="password" id="teacherPwd" placeholder="Créez ou entrez votre mot de passe" /></div>
-      <button class="btn btn-primary" onclick="enterTeacherMode()">Accéder — Mode enseignant →</button>
-    </div>
-  </div>
 
-  <div class="setup-divider"><span>ou</span></div>
+    <div class="divider"><span>ou</span></div>
 
-  <div class="setup-card">
-    <div class="setup-card-header">
-      <div class="setup-icon student">📚</div>
-      <div>
-        <h2>Élève</h2>
-        <p>Voir ma progression en temps réel</p>
+    <div class="setup-card">
+      <div class="setup-card-head">
+        <div class="setup-icon s">📚</div>
+        <div><h3>Élève</h3><p>Voir ma progression en temps réel</p></div>
       </div>
-    </div>
-    <div class="setup-card-body">
-      <div class="field"><label>Votre prénom / nom</label><input type="text" id="studentName" placeholder="Ex: Marie Dupont" /></div>
-      <button class="btn btn-green" onclick="enterStudentMode()">Voir ma progression →</button>
+      <div class="setup-card-body">
+        <div class="field"><label>Votre prénom / nom</label><input type="text" id="sName" placeholder="Ex : Marie Dupont" onkeydown="if(event.key==='Enter')enterStudent()" /></div>
+        <button class="btn btn-green" onclick="enterStudent()">Voir ma progression →</button>
+      </div>
     </div>
   </div>
 </div>
@@ -460,392 +255,342 @@
 <div class="app" id="teacherApp">
   <div class="container">
     <div class="toolbar">
-      <input type="text" id="newStudentInput" placeholder="Nom de l'élève…" onkeydown="if(event.key==='Enter')addStudent()" />
-      <button class="btn btn-primary" onclick="addStudent()">+ Ajouter un élève</button>
+      <input type="text" id="newName" placeholder="Nom de l'élève…" onkeydown="if(event.key==='Enter')addStudent()" />
+      <button class="btn btn-blue" onclick="addStudent()">+ Ajouter un élève</button>
       <button class="btn btn-ghost" onclick="logout()">Déconnexion</button>
     </div>
-    <div class="student-pills" id="studentPills"></div>
-    <div id="teacherGrid"></div>
+    <div class="pills" id="tPills"></div>
+    <div id="tGrid"></div>
   </div>
 </div>
 
 <!-- STUDENT APP -->
 <div class="app" id="studentApp">
   <div class="container">
-    <div id="studentView"></div>
+    <div id="sView"></div>
   </div>
 </div>
-
-<!-- SYNC BAR (fixed) -->
-<div class="sync-bar" id="fixedSyncBar"></div>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getDatabase, ref, set, onValue, push, remove, update } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
 
-// ── DATA ──────────────────────────────────────────────────────────────────
+/* ── DATA ── */
+const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+const LV_COLORS = {
+  A1:{stroke:'#3B6D11',fill:'#EAF3DE'},A2:{stroke:'#0F6E56',fill:'#E1F5EE'},
+  B1:{stroke:'#185FA5',fill:'#E6F1FB'},B2:{stroke:'#534AB7',fill:'#EEEDFE'},
+  C1:{stroke:'#854F0B',fill:'#FAEEDA'},C2:{stroke:'#993C1D',fill:'#FAECE7'},
+};
+const BADGE_BG = {
+  A1:'#EAF3DE',A2:'#E1F5EE',B1:'#E6F1FB',B2:'#EEEDFE',C1:'#FAEEDA',C2:'#FAECE7',
+};
+const BADGE_FG = {
+  A1:'#27500A',A2:'#085041',B1:'#0C447C',B2:'#3C3489',C1:'#633806',C2:'#712B13',
+};
 const SKILLS = [
-  { group: 'Compréhension', items: [
-    { id: 'ecouter', label: 'Écouter', desc: { A1:'Mots familiers et expressions très courantes, si on parle lentement.', A2:'Vocabulaire fréquent (famille, achats). Annonces simples et claires.', B1:'Points essentiels en langage standard. Émissions radio/TV lentes.', B2:'Conférences longues et argumentation complexe. Films en langue standard.', C1:'Discours longs même non structurés. Émissions TV sans effort.', C2:'Toute langue parlée, registres complexes et implicites.' }},
-    { id: 'lire', label: 'Lire', desc: { A1:'Noms familiers et phrases très simples (affiches, catalogues).', A2:'Textes courts simples. Publicités, menus, horaires. Lettres courtes.', B1:'Textes en langue courante. Lettres avec sentiments et souhaits.', B2:'Articles et rapports contemporains. Texte littéraire en prose.', C1:'Textes longs et complexes, littéraires ou factuels.', C2:'Tout texte, y compris abstraits et très spécialisés.' }},
+  {group:'Compréhension',items:[
+    {id:'ecouter',label:'Écouter',desc:{
+      A1:'Je comprends des mots familiers et expressions très courantes si on parle lentement.',
+      A2:'Je saisis l\'essentiel d\'annonces simples et de messages clairs sur des sujets courants.',
+      B1:'Je comprends les points essentiels en langage standard sur des sujets familiers (travail, école, loisirs).',
+      B2:'Je suis des conférences longues et une argumentation complexe si le sujet m\'est familier.',
+      C1:'Je comprends un discours long même non structuré. Je regarde la TV sans effort.',
+      C2:'Je comprends toute langue parlée, registres variés et implicites inclus.',
+    }},
+    {id:'lire',label:'Lire',desc:{
+      A1:'Je comprends des noms familiers et phrases très simples (affiches, panneaux, catalogues).',
+      A2:'Je lis des textes courts et simples. Je trouve des infos dans publicités, menus, horaires.',
+      B1:'Je comprends des textes en langue courante et des lettres décrivant événements et sentiments.',
+      B2:'Je lis articles et rapports contemporains avec prise de position des auteurs.',
+      C1:'Je comprends des textes longs et complexes, littéraires ou factuels, et j\'apprécie les styles.',
+      C2:'Je lis tout type de texte, y compris abstraits, spécialisés et très techniques.',
+    }},
   ]},
-  { group: 'Expression orale', items: [
-    { id: 'conversation', label: 'Conversation', desc: { A1:'Communication simple si l\'interlocuteur répète. Questions basiques.', A2:'Tâches simples, échanges brefs sur sujets familiers.', B1:'Situations en voyage. Conversation sans préparation.', B2:'Spontanéité et aisance avec un natif. Défendre ses opinions.', C1:'Expression courante et fluide. Nuances fines.', C2:'Toute conversation, argumentation précise et spontanée.' }},
-    { id: 'oral_continu', label: 'Expression en continu', desc: { A1:'Phrases simples sur mon logement et les gens que je connais.', A2:'Décrire famille, conditions de vie, formation et travail.', B1:'Raconter expériences, rêves, espoirs. Donner des raisons.', B2:'Claires et détaillées sur grands sujets. Point de vue sur l\'actualité.', C1:'Argumentations claires intégrant des points de vue nuancés.', C2:'Présentation fluide sur tout sujet complexe, style adapté.' }},
+  {group:'Expression orale',items:[
+    {id:'conversation',label:'Conversation',desc:{
+      A1:'Je communique simplement si l\'interlocuteur répète et m\'aide. Je pose des questions basiques.',
+      A2:'Je gère des échanges simples et brefs sur des sujets familiers et des activités quotidiennes.',
+      B1:'Je fais face à la plupart des situations en voyage. Je participe à une conversation sans préparation.',
+      B2:'Je m\'exprime avec spontanéité et aisance avec un locuteur natif. Je défends mes opinions.',
+      C1:'Je m\'exprime couramment et de façon nuancée. J\'adapte la langue à des contextes professionnels.',
+      C2:'Je participe sans effort à toute conversation et argumente avec précision et spontanéité.',
+    }},
+    {id:'oral',label:'Expression en continu',desc:{
+      A1:'J\'utilise des expressions simples pour décrire mon logement et les gens que je connais.',
+      A2:'Je décris en termes simples ma famille, mes conditions de vie, ma formation et mon travail.',
+      B1:'Je raconte des expériences, des rêves et des espoirs. Je donne des raisons et explications.',
+      B2:'Je m\'exprime clairement sur une grande gamme de sujets. Je développe un point de vue.',
+      C1:'Je présente des descriptions claires et détaillées en intégrant des points de vue nuancés.',
+      C2:'Je présente de façon fluide et bien structurée sur tout sujet complexe avec style adapté.',
+    }},
   ]},
-  { group: 'Expression écrite', items: [
-    { id: 'ecrire', label: 'Écrire', desc: { A1:'Carte postale simple. Données personnelles dans un formulaire.', A2:'Notes et messages courts. Lettre simple de remerciements.', B1:'Texte simple et cohérent. Lettres sur expériences et impressions.', B2:'Textes clairs et détaillés. Essai ou rapport pour/contre.', C1:'Texte bien structuré sur sujets complexes. Essai nuancé.', C2:'Texte clair, fluide et stylistiquement adapté. Rapports complexes.' }},
+  {group:'Expression écrite',items:[
+    {id:'ecrire',label:'Écrire',desc:{
+      A1:'J\'écris une courte carte postale. Je remplis des données personnelles dans un formulaire.',
+      A2:'J\'écris des notes et messages simples. Je rédige une lettre personnelle simple.',
+      B1:'J\'écris un texte simple et cohérent. Je décris expériences et impressions dans des lettres.',
+      B2:'J\'écris des textes clairs et détaillés. Je rédige des essais ou rapports pour/contre une opinion.',
+      C1:'J\'écris des textes bien structurés sur sujets complexes. Je nuance mon point de vue.',
+      C2:'Je m\'exprime dans un texte clair, fluide et stylistiquement adapté. Je rédige des rapports complexes.',
+    }},
   ]},
 ];
-const LEVELS = ['A1','A2','B1','B2','C1','C2'];
+const ALL = SKILLS.flatMap(g => g.items);
 
-// ── STATE ─────────────────────────────────────────────────────────────────
-let db = null;
-let students = {};
-let currentStudentId = null;
-let currentMode = null; // 'teacher' | 'student'
-let currentStudentName = null;
-let unsubscribes = [];
+/* ── STATE ── */
+let db = null, students = {}, currentId = null, mode = null, studentName = null;
+let ringCharts = {};
 
-// ── CONFIG & FIREBASE INIT ────────────────────────────────────────────────
-function getConfig() {
-  try {
-    return JSON.parse(localStorage.getItem('cecrl_firebase_config') || 'null');
-  } catch { return null; }
-}
+/* ── FIREBASE ── */
+function getConfig(){ try{ return JSON.parse(localStorage.getItem('cecrl_cfg')||'null'); }catch{ return null; } }
 
-function saveConfig() {
-  const url = document.getElementById('cfg-url').value.trim();
-  const apiKey = document.getElementById('cfg-apikey').value.trim();
-  const projectId = document.getElementById('cfg-projectid').value.trim();
-  if (!url || !apiKey || !projectId) { alert('Veuillez remplir tous les champs.'); return; }
-  localStorage.setItem('cecrl_firebase_config', JSON.stringify({ databaseURL: url, apiKey, projectId, authDomain: `${projectId}.firebaseapp.com` }));
-  document.getElementById('configModal').style.display = 'none';
-  initFirebase();
-}
-window.saveConfig = saveConfig;
-
-function openConfig() {
-  const cfg = getConfig();
-  if (cfg) {
-    document.getElementById('cfg-url').value = cfg.databaseURL || '';
-    document.getElementById('cfg-apikey').value = cfg.apiKey || '';
-    document.getElementById('cfg-projectid').value = cfg.projectId || '';
+window.saveConfig = function(){
+  const url=document.getElementById('cfg-url').value.trim();
+  const key=document.getElementById('cfg-apikey').value.trim();
+  const pid=document.getElementById('cfg-projectid').value.trim();
+  if(!url||!key||!pid){ alert('Remplissez tous les champs.'); return; }
+  localStorage.setItem('cecrl_cfg', JSON.stringify({databaseURL:url,apiKey:key,projectId:pid,authDomain:`${pid}.firebaseapp.com`}));
+  document.getElementById('configModal').style.display='none';
+  boot();
+};
+window.openConfig = function(){
+  const c=getConfig();
+  if(c){
+    document.getElementById('cfg-url').value=c.databaseURL||'';
+    document.getElementById('cfg-apikey').value=c.apiKey||'';
+    document.getElementById('cfg-projectid').value=c.projectId||'';
   }
-  document.getElementById('configModal').style.display = 'flex';
-}
-window.openConfig = openConfig;
+  document.getElementById('configModal').style.display='flex';
+};
 
-function initFirebase() {
-  const cfg = getConfig();
-  if (!cfg) { document.getElementById('configModal').style.display = 'flex'; return; }
-  try {
-    const app = initializeApp(cfg, 'cecrl-' + Date.now());
+function boot(){
+  const c=getConfig();
+  if(!c){ document.getElementById('configModal').style.display='flex'; return; }
+  try{
+    const app = initializeApp(c,'cecrl');
     db = getDatabase(app);
-    document.getElementById('configModal').style.display = 'none';
+    syncStatus('loading','Connexion…');
+    onValue(ref(db,'students'), snap => {
+      students = snap.val()||{};
+      syncStatus('ok','Synchronisé');
+      if(mode==='teacher') renderTeacher();
+      if(mode==='student') renderStudent();
+    }, ()=> syncStatus('error','Erreur sync'));
     showSetup();
-    startListening();
-  } catch(e) {
-    alert('Erreur Firebase : ' + e.message);
-  }
+  }catch(e){ alert('Erreur Firebase : '+e.message); }
 }
 
-function startListening() {
-  const r = ref(db, 'students');
-  onValue(r, snap => {
-    students = snap.val() || {};
-    if (currentMode === 'teacher') renderTeacher();
-    if (currentMode === 'student') renderStudentView();
-    showSync('ok', 'Synchronisé');
-  }, err => showSync('error', 'Erreur sync'));
+function syncStatus(s,msg){
+  document.getElementById('sdot').className='sdot '+s;
+  document.getElementById('syncTxt').textContent=msg;
+  if(s==='ok') setTimeout(()=>{ document.getElementById('syncTxt').textContent='Synchronisé'; },2000);
 }
 
-// ── SYNC BAR ─────────────────────────────────────────────────────────────
-function showSync(status, msg) {
-  const bar = document.getElementById('syncBar');
-  const dot = document.getElementById('syncDot');
-  const txt = document.getElementById('syncText');
-  dot.className = 'sync-dot ' + status;
-  txt.textContent = msg;
-  bar.classList.add('visible');
-  if (status === 'ok') setTimeout(() => bar.classList.remove('visible'), 2000);
-}
-
-// ── MODE SWITCHING ────────────────────────────────────────────────────────
-function showSetup() {
-  document.getElementById('setupScreen').style.display = 'block';
+/* ── SETUP ── */
+function showSetup(){
+  document.getElementById('setup').style.display='block';
   document.getElementById('teacherApp').classList.remove('active');
   document.getElementById('studentApp').classList.remove('active');
-  document.getElementById('modeBadge').textContent = 'Accueil';
-  currentMode = null;
+  document.getElementById('modeBadge').textContent='Accueil';
+  document.getElementById('modeBadge').className='mode-badge';
+  mode=null;
 }
-window.showSetup = showSetup;
+window.switchMode = showSetup;
+window.logout = showSetup;
 
-function enterTeacherMode() {
-  const pwd = document.getElementById('teacherPwd').value;
-  const stored = localStorage.getItem('cecrl_teacher_pwd');
-  if (!stored) {
-    if (pwd.length < 4) { alert('Mot de passe trop court (4 caractères minimum).'); return; }
-    localStorage.setItem('cecrl_teacher_pwd', pwd);
-  } else if (pwd !== stored) {
-    alert('Mot de passe incorrect.');
-    return;
-  }
-  currentMode = 'teacher';
-  document.getElementById('setupScreen').style.display = 'none';
+window.enterTeacher = function(){
+  const pwd=document.getElementById('tPwd').value;
+  const stored=localStorage.getItem('cecrl_tpwd');
+  if(!stored){ if(pwd.length<4){alert('Mot de passe trop court (4 car. min)');return;} localStorage.setItem('cecrl_tpwd',pwd); }
+  else if(pwd!==stored){ alert('Mot de passe incorrect.'); return; }
+  mode='teacher';
+  document.getElementById('setup').style.display='none';
   document.getElementById('teacherApp').classList.add('active');
-  document.getElementById('modeBadge').textContent = 'Mode enseignant';
-  document.getElementById('modeBadge').className = 'mode-badge teacher';
+  document.getElementById('modeBadge').textContent='Enseignant';
+  document.getElementById('modeBadge').className='mode-badge teacher';
   renderTeacher();
-}
-window.enterTeacherMode = enterTeacherMode;
+};
 
-function enterStudentMode() {
-  const name = document.getElementById('studentName').value.trim();
-  if (!name) { alert('Veuillez entrer votre nom.'); return; }
-  currentMode = 'student';
-  currentStudentName = name;
-  document.getElementById('setupScreen').style.display = 'none';
+window.enterStudent = function(){
+  const n=document.getElementById('sName').value.trim();
+  if(!n){ alert('Entrez votre nom.'); return; }
+  studentName=n; mode='student';
+  document.getElementById('setup').style.display='none';
   document.getElementById('studentApp').classList.add('active');
-  document.getElementById('modeBadge').textContent = 'Vue élève';
-  document.getElementById('modeBadge').className = 'mode-badge student';
-  renderStudentView();
-}
-window.enterStudentMode = enterStudentMode;
+  document.getElementById('modeBadge').textContent='Élève';
+  document.getElementById('modeBadge').className='mode-badge student';
+  renderStudent();
+};
 
-function logout() {
-  currentMode = null;
-  currentStudentId = null;
-  showSetup();
-}
-window.logout = logout;
+/* ── TEACHER ACTIONS ── */
+window.addStudent = function(){
+  const inp=document.getElementById('newName');
+  const name=inp.value.trim();
+  if(!name||!db)return;
+  const r=push(ref(db,'students'));
+  set(r,{name,checks:{}});
+  inp.value='';
+  syncStatus('loading','Enregistrement…');
+};
+window.delStudent = function(id){
+  if(!confirm('Supprimer cet élève ?'))return;
+  remove(ref(db,'students/'+id));
+  if(currentId===id){ currentId=null; }
+};
+window.selStudent = function(id){ currentId=id; renderTeacher(); };
+window.toggle = function(sid,skill,lv){
+  const s=students[sid]; if(!s)return;
+  const k=skill+'_'+lv;
+  update(ref(db,'students/'+sid+'/checks'),{[k]:!(s.checks&&s.checks[k])});
+  syncStatus('loading','Enregistrement…');
+};
 
-function switchMode() {
-  showSetup();
+/* ── COMPUTE ── */
+function computeLevel(checks){
+  checks=checks||{};
+  let hi=-1;
+  LEVELS.forEach((lv,li)=>{ if(ALL.every(sk=>checks[sk.id+'_'+lv]))hi=li; });
+  return hi>=0?LEVELS[hi]:null;
 }
-window.switchMode = switchMode;
+function skillDone(checks,id){ return LEVELS.filter(lv=>(checks||{})[id+'_'+lv]).length; }
+function globalDone(checks){ return ALL.reduce((t,sk)=>t+skillDone(checks,sk.id),0); }
 
-// ── TEACHER FUNCTIONS ─────────────────────────────────────────────────────
-function addStudent() {
-  const input = document.getElementById('newStudentInput');
-  const name = input.value.trim();
-  if (!name || !db) return;
-  const newRef = push(ref(db, 'students'));
-  set(newRef, { name, checks: {} });
-  input.value = '';
-  showSync('loading', 'Enregistrement…');
-}
-window.addStudent = addStudent;
-
-function deleteStudent(id) {
-  if (!confirm('Supprimer cet élève ?')) return;
-  remove(ref(db, 'students/' + id));
-  if (currentStudentId === id) currentStudentId = null;
-}
-window.deleteStudent = deleteStudent;
-
-function selectStudent(id) {
-  currentStudentId = id;
-  renderTeacher();
-}
-window.selectStudent = selectStudent;
-
-function toggleCheck(studentId, skillId, level) {
-  if (!db) return;
-  const s = students[studentId];
-  if (!s) return;
-  const key = skillId + '_' + level;
-  const val = !(s.checks && s.checks[key]);
-  update(ref(db, `students/${studentId}/checks`), { [key]: val });
-  showSync('loading', 'Enregistrement…');
-}
-window.toggleCheck = toggleCheck;
-
-// ── COMPUTE LEVEL ─────────────────────────────────────────────────────────
-function computeLevel(checks) {
-  checks = checks || {};
-  const allSkills = SKILLS.flatMap(g => g.items.map(i => i.id));
-  let highest = -1;
-  LEVELS.forEach((lv, li) => {
-    if (allSkills.every(sid => checks[sid + '_' + lv])) highest = li;
+/* ── RING CHART ── */
+function drawRing(canvasId,pct,stroke,fill){
+  if(ringCharts[canvasId]){ ringCharts[canvasId].destroy(); delete ringCharts[canvasId]; }
+  const c=document.getElementById(canvasId);
+  if(!c)return;
+  ringCharts[canvasId]=new Chart(c,{
+    type:'doughnut',
+    data:{datasets:[{data:[pct,100-pct],backgroundColor:[stroke,fill],borderWidth:0,cutout:'72%'}]},
+    options:{responsive:false,maintainAspectRatio:false,animation:{duration:500},plugins:{legend:{display:false},tooltip:{enabled:false}}}
   });
-  return highest >= 0 ? LEVELS[highest] : null;
 }
 
-function countChecks(checks) {
-  checks = checks || {};
-  const allSkills = SKILLS.flatMap(g => g.items.map(i => i.id));
-  let done = 0, total = allSkills.length * LEVELS.length;
-  allSkills.forEach(sid => LEVELS.forEach(lv => { if (checks[sid + '_' + lv]) done++; }));
-  return { done, total };
-}
-
-// ── RENDER TEACHER ────────────────────────────────────────────────────────
-function renderTeacher() {
-  const pills = document.getElementById('studentPills');
-  const grid = document.getElementById('teacherGrid');
-  const ids = Object.keys(students);
-
-  if (!ids.length) {
-    pills.innerHTML = '';
-    grid.innerHTML = `<div class="empty"><div class="empty-icon">👩‍🏫</div><h3>Aucun élève</h3><p>Ajoutez votre premier élève ci-dessus.</p></div>`;
-    return;
-  }
-
-  // Auto-select first if none
-  if (!currentStudentId || !students[currentStudentId]) currentStudentId = ids[0];
-
-  pills.innerHTML = ids.map(id => {
-    const s = students[id];
-    const lv = computeLevel(s.checks);
-    return `<div class="student-pill${id === currentStudentId ? ' active' : ''}" onclick="selectStudent('${id}')">
-      ${s.name}${lv ? ` <span style="font-size:10px;opacity:0.7">${lv}</span>` : ''}
-      <span class="pill-del" onclick="event.stopPropagation();deleteStudent('${id}')">✕</span>
-    </div>`;
+/* ── SHARED HTML BUILDERS ── */
+function buildGlobalBar(s){
+  const checks=s.checks||{};
+  const lv=computeLevel(checks);
+  const lvIdx=lv?LEVELS.indexOf(lv):-1;
+  const done=globalDone(checks);
+  const pct=Math.round(done/(ALL.length*6)*100);
+  const bg=lv?BADGE_BG[lv]:'#EDEAE3';
+  const fg=lv?BADGE_FG[lv]:'#9B9A96';
+  const segs=LEVELS.map((l,i)=>{
+    const d=ALL.every(sk=>checks[sk.id+'_'+l]);
+    const p=ALL.some(sk=>checks[sk.id+'_'+l]);
+    return `<div class="seg${d?' done':p?' partial':''}"></div>`;
   }).join('');
-
-  const s = students[currentStudentId];
-  if (!s) return;
-  const checks = s.checks || {};
-  const level = computeLevel(checks);
-  const { done, total } = countChecks(checks);
-  const allSkills = SKILLS.flatMap(g => g.items.map(i => i.id));
-
-  const initials = s.name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
-
-  grid.innerHTML = `
-    <div class="student-header-card">
-      <div class="student-avatar">${initials}</div>
-      <div class="student-meta">
-        <h2>${s.name}</h2>
-        <p>${done} / ${total} compétences validées</p>
-      </div>
-      <div class="level-chip level-${level || 'none'}">${level ? '✓ Niveau ' + level : 'En progression'}</div>
+  const markers=LEVELS.map((l,i)=>`<span class="${i<=lvIdx?'reached':''}">${l}</span>`).join('');
+  return `<div class="gbar-card">
+    <div class="gbar-top">
+      <span class="gbar-name">Progression de ${s.name}</span>
+      <span class="lv-badge" style="background:${bg};color:${fg}">${lv?'Niveau '+lv:'En cours — '+pct+'%'}</span>
     </div>
-
-    <div class="progress-section">
-      <div class="progress-labels">
-        ${LEVELS.map(lv => `<span>${lv}</span>`).join('')}
-      </div>
-      <div class="progress-track">
-        ${LEVELS.map(lv => {
-          const allDone = allSkills.every(sid => checks[sid + '_' + lv]);
-          const someDone = allSkills.some(sid => checks[sid + '_' + lv]);
-          return `<div class="progress-seg ${allDone ? 'done' : someDone ? 'partial' : ''}"></div>`;
-        }).join('')}
-      </div>
-    </div>
-
-    <div class="grid-section">
-      ${SKILLS.map(group => `
-        <div class="skill-group-card">
-          <div class="skill-group-header">${group.group}</div>
-          <div class="skill-row header">
-            <div class="skill-row-label">Compétence</div>
-            ${LEVELS.map(lv => `<div class="skill-cell">${lv}</div>`).join('')}
-          </div>
-          ${group.items.map(skill => `
-            <div class="skill-row">
-              <div class="skill-row-label">${skill.label}</div>
-              ${LEVELS.map(lv => {
-                const key = skill.id + '_' + lv;
-                const checked = checks[key];
-                return `<div class="skill-cell${checked ? ' checked' : ''}" onclick="toggleCheck('${currentStudentId}','${skill.id}','${lv}')">
-                  <div class="cell-level">${lv}</div>
-                  <div class="cell-check">${checked ? '✓' : ''}</div>
-                  <div class="cell-tooltip">${skill.desc[lv]}</div>
-                </div>`;
-              }).join('')}
-            </div>
-          `).join('')}
-        </div>
-      `).join('')}
-    </div>
-  `;
+    <div class="track">${segs}</div>
+    <div class="lv-markers">${markers}</div>
+  </div>`;
 }
 
-// ── RENDER STUDENT VIEW ───────────────────────────────────────────────────
-function renderStudentView() {
-  const view = document.getElementById('studentView');
-  if (!currentStudentName) return;
+function buildCircles(checks,readonly){
+  return `<div class="circles">${ALL.map(sk=>{
+    const done=skillDone(checks,sk.id);
+    const pct=Math.round(done/6*100);
+    const lv=done>0?LEVELS[done-1]:null;
+    const stroke=lv?LV_COLORS[lv].stroke:'#B4B2A9';
+    const fill=lv?LV_COLORS[lv].fill:'#F1EFE8';
+    return `<div class="ring-card">
+      <canvas id="ring_${sk.id}_${readonly?'s':'t'}" width="72" height="72" role="img" aria-label="${sk.label} : ${pct}%">${pct}%</canvas>
+      <div class="ring-pct">${pct}%</div>
+      <div class="ring-name">${sk.label}</div>
+      <div class="ring-lv">${lv?'niveau '+lv:'à débuter'}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
 
-  // Find student by name (case-insensitive)
-  const found = Object.entries(students).find(([id, s]) =>
-    s.name.toLowerCase() === currentStudentName.toLowerCase()
-  );
+function buildSkills(s,readonly){
+  const checks=s.checks||{};
+  const rv=readonly;
+  return `<div class="skills">${SKILLS.map(g=>`
+    <div class="group-card">
+      <div class="group-title">${g.group}</div>
+      ${g.items.map(sk=>`
+        <div class="skill-block">
+          <div class="skill-name">${sk.label}</div>
+          <div class="lvgrid">${LEVELS.map(lv=>{
+            const k=sk.id+'_'+lv;
+            const chk=checks[k];
+            const onclick=rv?'':`onclick="toggle('${s.id}','${sk.id}','${lv}')"`;
+            return `<div class="lvcell${chk?' checked':''}${rv?' ro':''}" ${onclick}>
+              <div class="lvtag ${lv}">${lv}</div>
+              <div class="chkbox">${chk?'✓':''}</div>
+              <div class="desc">${sk.desc[lv]}</div>
+            </div>`;
+          }).join('')}</div>
+        </div>`).join('')}
+    </div>`).join('')}
+  </div>`;
+}
 
-  if (!found) {
-    view.innerHTML = `
-      <div class="student-view-header">
-        <div class="welcome">Bonjour,</div>
-        <h2>${currentStudentName}</h2>
-      </div>
-      <div class="empty">
-        <div class="empty-icon">🔍</div>
-        <h3>Élève introuvable</h3>
-        <p>Votre enseignant ne vous a pas encore ajouté(e) à la grille.<br>Vérifiez l'orthographe de votre nom.</p>
-      </div>`;
+function scheduleRings(checks,suffix){
+  setTimeout(()=>{
+    ALL.forEach(sk=>{
+      const done=skillDone(checks,sk.id);
+      const pct=Math.round(done/6*100);
+      const lv=done>0?LEVELS[done-1]:null;
+      drawRing('ring_'+sk.id+'_'+suffix, pct, lv?LV_COLORS[lv].stroke:'#B4B2A9', lv?LV_COLORS[lv].fill:'#F1EFE8');
+    });
+  },60);
+}
+
+/* ── RENDER TEACHER ── */
+function renderTeacher(){
+  const ids=Object.keys(students);
+  const pillsEl=document.getElementById('tPills');
+  const gridEl=document.getElementById('tGrid');
+  if(!ids.length){
+    pillsEl.innerHTML='';
+    gridEl.innerHTML=`<div class="empty"><div class="ei">👩‍🏫</div><p>Ajoutez votre premier élève ci-dessus.</p></div>`;
     return;
   }
-
-  const [sid, s] = found;
-  const checks = s.checks || {};
-  const level = computeLevel(checks);
-  const allSkills = SKILLS.flatMap(g => g.items.map(i => i.id));
-
-  view.innerHTML = `
-    <div class="student-view-header">
-      <div class="welcome">Bonjour,</div>
-      <h2>${s.name}</h2>
-      <div class="level-display">${level ? '🎯 Niveau atteint : ' + level : '📈 Progression en cours…'}</div>
-    </div>
-
-    <div class="skill-stats">
-      ${SKILLS.flatMap(g => g.items).map(skill => {
-        const done = LEVELS.filter(lv => checks[skill.id + '_' + lv]).length;
-        return `<div class="stat-card">
-          <div class="stat-label">${skill.label}</div>
-          <div class="stat-count">${done > 0 ? LEVELS[done-1] : '—'}</div>
-          <div class="stat-bar"><div class="stat-fill" style="width:${Math.round(done/6*100)}%"></div></div>
-        </div>`;
-      }).join('')}
-    </div>
-
-    <div class="grid-section">
-      ${SKILLS.map(group => `
-        <div class="skill-group-card">
-          <div class="skill-group-header">${group.group}</div>
-          <div class="skill-row header">
-            <div class="skill-row-label">Compétence</div>
-            ${LEVELS.map(lv => `<div class="skill-cell">${lv}</div>`).join('')}
-          </div>
-          ${group.items.map(skill => `
-            <div class="skill-row">
-              <div class="skill-row-label">${skill.label}</div>
-              ${LEVELS.map(lv => {
-                const key = skill.id + '_' + lv;
-                const checked = checks[key];
-                return `<div class="skill-cell${checked ? ' checked' : ''} readonly">
-                  <div class="cell-level">${lv}</div>
-                  <div class="cell-check">${checked ? '✓' : ''}</div>
-                  <div class="cell-tooltip">${skill.desc[lv]}</div>
-                </div>`;
-              }).join('')}
-            </div>
-          `).join('')}
-        </div>
-      `).join('')}
-    </div>
-  `;
+  if(!currentId||!students[currentId]) currentId=ids[0];
+  pillsEl.innerHTML=ids.map(id=>{
+    const s=students[id];
+    const lv=computeLevel(s.checks);
+    return `<span class="pill${id===currentId?' active':''}" onclick="selStudent('${id}')">
+      ${s.name}${lv?` <small style="opacity:0.7">${lv}</small>`:''}
+      <span class="pdel" onclick="event.stopPropagation();delStudent('${id}')">✕</span>
+    </span>`;
+  }).join('');
+  const s=students[currentId];
+  const checks=s.checks||{};
+  gridEl.innerHTML=buildGlobalBar(s)+buildCircles(checks,false)+buildSkills(s,false);
+  scheduleRings(checks,'t');
 }
 
-// ── BOOT ──────────────────────────────────────────────────────────────────
-const cfg = getConfig();
-if (cfg) {
-  initFirebase();
-} else {
-  document.getElementById('configModal').style.display = 'flex';
+/* ── RENDER STUDENT ── */
+function renderStudent(){
+  const el=document.getElementById('sView');
+  const entry=Object.entries(students).find(([,s])=>s.name.toLowerCase()===studentName.toLowerCase());
+  if(!entry){
+    el.innerHTML=`<div class="sv-header"><div class="welcome">Bonjour,</div><h2>${studentName}</h2></div>
+    <div class="empty"><div class="ei">🔍</div><p>Votre enseignant ne vous a pas encore ajouté(e).<br>Vérifiez l'orthographe de votre nom.</p></div>`;
+    return;
+  }
+  const [,s]=entry;
+  const checks=s.checks||{};
+  const lv=computeLevel(checks);
+  el.innerHTML=`<div class="sv-header">
+    <div class="welcome">Bonjour,</div>
+    <h2>${s.name}</h2>
+    <div class="lv-display">${lv?'🎯 Niveau atteint : '+lv:'📈 Progression en cours…'}</div>
+  </div>`+buildGlobalBar(s)+buildCircles(checks,true)+buildSkills(s,true);
+  scheduleRings(checks,'s');
 }
+
+/* ── BOOT ── */
+boot();
 </script>
 </body>
 </html>
